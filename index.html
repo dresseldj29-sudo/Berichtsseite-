@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>UnfallCheck AI – Unfallberichte prüfen</title>
+<style>
+:root {
+  --bg:#0b1120;
+  --panel:#121c2d;
+  --panel2:#18253a;
+  --line:#29374d;
+  --text:#f1f5fb;
+  --muted:#9eacc1;
+  --blue:#60a5fa;
+  --cyan:#5eead4;
+  --green:#4ade80;
+  --yellow:#fbbf24;
+  --red:#fb7185;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:radial-gradient(ellipse at top,#182b46 0,#0b1120 55%);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+}
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible { outline:2px solid var(--cyan); outline-offset:3px; }
+header {
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:15px max(20px,calc((100vw - 1200px)/2));
+  background:#0b1120ed;border-bottom:1px solid var(--line);
+  backdrop-filter:blur(14px);
+}
+.brand {display:flex;align-items:center;gap:12px;font-weight:850;letter-spacing:-.5px}
+.logo {
+  width:43px;height:43px;border-radius:14px;
+  display:grid;place-items:center;font-size:22px;
+  background:linear-gradient(135deg,#2563eb,#14b8a6);
+  box-shadow:0 8px 28px #2563eb40;
+}
+.brand small {display:block;color:var(--muted);font-weight:500;letter-spacing:0;font-size:11px}
+.pill {border:1px solid #2f4960;border-radius:30px;padding:8px 12px;font-size:12px;color:var(--cyan)}
+main {max-width:1200px;margin:auto;padding:35px 20px 70px}
+.hero {display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:center;margin-bottom:30px}
+.eyebrow {color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h1 {font-size:clamp(32px,5vw,53px);line-height:1.08;letter-spacing:-1.8px;margin:13px 0}
+h1 span {color:var(--cyan)}
+p {line-height:1.65}
+.muted {color:var(--muted)}
+.hero-card,.panel,.result-card {
+  background:linear-gradient(145deg,#17243a,#111a2b);
+  border:1px solid var(--line);border-radius:20px;
+}
+.hero-card {padding:23px}
+.hero-card .big {font-size:34px;font-weight:850;color:var(--cyan)}
+.hero-card .mini {font-size:12px;color:var(--muted)}
+.hero-card .steps {display:grid;gap:13px;margin-top:19px}
+.hero-card .step {display:flex;align-items:center;gap:11px;font-size:13px}
+.dot {width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:#223a51;color:var(--cyan);flex-shrink:0}
+.layout {display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel {padding:24px;min-width:0}
+.panel-head {display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:22px}
+h2 {font-size:19px;margin:0 0 7px}
+h3 {font-size:15px;margin:0 0 12px}
+label {display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.field {margin-bottom:18px}
+input,select,textarea {
+  width:100%;background:#0b1423;border:1px solid #34435a;
+  color:var(--text);border-radius:11px;padding:12px 13px;
+}
+input::placeholder,textarea::placeholder {color:#71819a}
+textarea {resize:vertical;min-height:110px;line-height:1.65}
+#report {min-height:230px}
+.hint {font-size:12px;color:var(--muted);margin-top:7px;line-height:1.5}
+.two {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checkrow {
+  display:flex;align-items:flex-start;gap:11px;padding:14px;
+  border:1px solid #34435a;border-radius:12px;background:#0b1423;
+}
+.checkrow input {width:19px;height:19px;margin:2px 0 0;accent-color:#14b8a6;flex-shrink:0}
+.checkrow label {margin:0;line-height:1.5}
+.checkrow small {display:block;color:var(--muted);font-weight:400;margin-top:3px}
+.btn {
+  border:0;border-radius:11px;padding:13px 17px;font-weight:800;
+  transition:transform .15s,filter .15s;
+}
+.btn:hover {filter:brightness(1.1);transform:translateY(-1px)}
+.primary {background:linear-gradient(100deg,#2563eb,#0d9488);color:white}
+.secondary {background:#223149;color:var(--text);border:1px solid #34435a}
+.full {width:100%}
+.actions {display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.actions .btn {flex:1}
+.notice {padding:12px 14px;border-radius:11px;background:#172c3a;border:1px solid #285060;color:#c6f8ef;font-size:12px;line-height:1.6}
+.status {display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.status::before {content:"";width:8px;height:8px;border-radius:50%;background:var(--green)}
+.hidden {display:none!important}
+#loading {margin-top:22px;padding:22px;background:#0b1423;border:1px solid #34435a;border-radius:15px}
+.loading-title {display:flex;justify-content:space-between;gap:10px;font-weight:750;font-size:14px}
+.progress {height:7px;background:#253248;border-radius:9px;overflow:hidden;margin:17px 0}
+#progressBar {height:100%;width:0;background:linear-gradient(90deg,#3b82f6,#5eead4);transition:width .4s}
+#scanText {font-family:ui-monospace,monospace;font-size:12px;color:#8de7d6;line-height:1.8;min-height:94px;white-space:pre-wrap}
+.scanline {height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scan 1.5s linear infinite;margin:13px 0}
+@keyframes scan {0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+#results {margin-top:25px}
+.result-card {padding:25px;margin-bottom:18px}
+.scoretop {display:flex;align-items:center;gap:23px;flex-wrap:wrap}
+.scorecircle {
+ width:100px;height:100px;border-radius:50%;display:grid;place-items:center;
+ border:6px solid #244a54;background:#0c1c2b;flex-shrink:0;
+ font-size:27px;font-weight:850;color:var(--cyan);
+}
+.scorecircle small {font-size:11px;color:var(--muted);font-weight:500}
+.result-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}
+.metric {background:#0b1423;border:1px solid #2b3a50;border-radius:13px;padding:15px}
+.metric strong {display:block;font-size:22px;margin-bottom:5px}
+.metric span {font-size:12px;color:var(--muted)}
+.checklist {display:grid;gap:10px}
+.checkitem {padding:12px;border-radius:10px;background:#0b1423;border:1px solid #29374d;font-size:13px;line-height:1.55}
+.checkitem strong {display:block;margin-bottom:4px}
+.good {color:var(--green)} .warn {color:var(--yellow)} .bad {color:var(--red)}
+.copy-protect {
+ user-select:none;-webkit-user-select:none;
+}
+.example {white-space:pre-wrap;line-height:1.85;font-size:14px;color:#d7e6f5}
+footer {max-width:1200px;margin:auto;padding:0 20px 35px;color:var(--muted);font-size:12px;line-height:1.7}
+footer a {color:var(--cyan)}
+@media(max-width:800px) {
+ .hero,.layout {grid-template-columns:1fr}
+ header {padding:12px 16px}
+ main {padding:25px 14px 50px}
+ .panel {padding:18px}
+ .result-grid {grid-template-columns:1fr 1fr}
+}
+@media(max-width:430px) {
+ .two {grid-template-columns:1fr}
+ .result-grid {grid-template-columns:1fr}
+ .pill {font-size:10px}
+}
+@media(prefers-reduced-motion:reduce) {
+ *,*::before,*::after {animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo" aria-hidden="true">✓</div>
+    <div>UnfallCheck <span style="color:#5eead4">AI</span>
+      <small>BERICHTSPRÜFUNG · LERNASSISTENT</small>
+    </div>
+  </div>
+  <div class="pill">● PRIVAT · LOKALE PRÜFUNG</div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Dein Schreibassistent</div>
+      <h1>Unfallberichte.<br><span>Prüfen. Verstehen.</span></h1>
+      <p class="muted">Prüfe Aufbau, W-Fragen, Zeitfolge und Übereinstimmung mit deinen Angaben. Du bekommst verständliche Hinweise, damit du deinen Bericht selbst verbessern kannst.</p>
+    </div>
+    <div class="hero-card">
+      <div class="big">01 / 04</div>
+      <div class="mini">So läuft die Überprüfung ab</div>
+      <div class="steps">
+        <div class="step"><span class="dot">1</span> Angaben und Bericht erfassen</div>
+        <div class="step"><span class="dot">2</span> W-Fragen und Aufbau untersuchen</div>
+        <div class="step"><span class="dot">3</span> Fakten mit den Angaben abgleichen</div>
+        <div class="step"><span class="dot">4</span> Bewertung und Verbesserungstipps</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>01 — Deine Angaben</h2>
+          <p class="muted" style="font-size:13px;margin:0">Schule, Klasse und bekannte Informationen</p>
+        </div>
+        <span class="status">Bereit</span>
+      </div>
+
+      <div class="two">
+        <div class="field">
+          <label for="school">Schule</label>
+          <input id="school" maxlength="100" placeholder="Name deiner Schule">
+          <div class="hint">Freiwillig. Wird nicht überprüft.</div>
+        </div>
+        <div class="field">
+          <label for="className">Klasse</label>
+          <select id="className">
+            <option value="">Bitte auswählen</option>
+            <option>5. Klasse</option><option>6. Klasse</option>
+            <option>7. Klasse</option><option>8. Klasse</option>
+            <option>9. Klasse</option><option>10. Klasse</option>
+            <option>11. Klasse</option><option>12. Klasse</option>
+            <option>13. Klasse</option><option>Andere</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="facts">Bekannte Fakten zum Unfall</label>
+        <textarea id="facts" placeholder="Beispiel: Am Montag um 10 Uhr ereignete sich auf dem Schulhof ein Unfall. Max stieß beim Rennen mit einem anderen Schüler zusammen. Die Lehrerin rief Hilfe."></textarea>
+        <div class="hint">Trage nur bekannte Informationen ein. Diese Angaben sind die Grundlage für den Faktenvergleich.</div>
+      </div>
+
+      <div class="field">
+        <label for="criteria">Bewertungskriterien (optional)</label>
+        <textarea id="criteria" style="min-height:85px" placeholder="z. B. Einleitung, Hauptteil, Schluss, sachliche Sprache, Präteritum"></textarea>
+        <div class="hint">Eigene Vorgaben deiner Lehrkraft. Ohne Vorgaben werden allgemeine Kriterien verwendet.</div>
+      </div>
+
+      <div class="notice">
+        <strong>Datenschutzhinweis:</strong> Diese Version sendet deine Texte nicht an einen KI-Anbieter. Verwende trotzdem keine echten Namen, Adressen oder anderen sensiblen persönlichen Daten.
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>02 — Unfallbericht</h2>
+          <p class="muted" style="font-size:13px;margin:0">Füge deinen Text ein oder schreibe direkt hier.</p>
+        </div>
+        <span class="status">Eingabe</span>
+      </div>
+
+      <div class="field">
+        <label for="report">Dein Bericht</label>
+        <textarea id="report" placeholder="Schreibe hier deinen Unfallbericht …" spellcheck="true"></textarea>
+        <div class="hint"><span id="wordCount">0 Wörter</span> · <span id="charCount">0 Zeichen</span></div>
+      </div>
+
+      <div class="checkrow">
+        <input type="checkbox" id="lrs">
+        <label for="lrs">LRS-Modus aktivieren
+          <small>Rechtschreibung und Schreibfehler fließen nicht in die Bewertung ein. Inhalt und Verständlichkeit werden weiterhin geprüft.</small>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button class="btn secondary" id="exampleBtn" type="button">Beispiel laden</button>
+        <button class="btn secondary" id="clearBtn" type="button">Leeren</button>
+      </div>
+      <div style="margin-top:16px">
+        <button class="btn primary full" id="checkBtn" type="button">✦ Bericht jetzt prüfen</button>
+      </div>
+      <p class="hint">Die Prüfung ist eine automatische Lernhilfe, keine verbindliche Schulnote. Die Website bewertet nicht die Schwere eines realen Unfalls.</p>
+    </section>
+  </div>
+
+  <section id="loading" class="hidden" aria-live="polite">
+    <div class="loading-title"><span id="loadingTitle">Prüfung wird vorbereitet …</span><span id="percent">0 %</span></div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="scanline"></div>
+    <div id="scanText">Warte auf Start …</div>
+  </section>
+
+  <section id="results" class="hidden" aria-live="polite"></section>
+
+  <section class="panel" style="margin-top:22px">
+    <div class="panel-head">
+      <div>
+        <h2>03 — Beispiel für einen guten Unfallbericht</h2>
+        <p class="muted" style="font-size:13px;margin:0">Ein neutrales Muster zum Lernen</p>
+      </div>
+      <span class="pill">MUSTER</span>
+    </div>
+    <div class="notice">Das folgende Beispiel ist erfunden und dient nur zum Üben. Für deinen eigenen Bericht zählen ausschließlich die Informationen, die dir vorgegeben wurden.</div>
+    <div class="example copy-protect" id="modelExample" tabindex="0">
+      <strong>Unfall auf dem Schulhof</strong>
+
+Am Montag, dem 12. Mai, ereignete sich gegen 10 Uhr auf dem Schulhof einer Schule ein Unfall.
+
+Während der Pause lief ein Schüler über den Schulhof. Dabei stieß er mit einem anderen Schüler zusammen. Einer der Schüler fiel zu Boden und verletzte sich am Knie. Eine Lehrkraft bemerkte den Unfall und eilte zu den beiden Schülern. Anschließend wurde Hilfe organisiert.
+
+Wie schwer die Verletzung war, ist nicht bekannt. Weitere Angaben zum Unfallhergang liegen nicht vor.
+    </div>
+    <div class="hint">Das Muster ist bewusst sachlich. Bei einem echten Arbeitsauftrag dürfen erfundene Angaben nicht als Tatsachen übernommen werden.</div>
+  </section>
+</main>
+
+<footer>
+  <strong>Hinweis zur Technik:</strong> Diese GitHub-Pages-Version verwendet eine lokale, regelbasierte Textanalyse und keine echte generative KI. Sie kann keine Schulvorgaben kennen, die nicht eingetragen wurden, und keine Fakten außerhalb deiner Eingaben verifizieren. Eine Note ist nur eine unverbindliche Orientierung.
+  <br>UnfallCheck AI · Lernprojekt
+</footer>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const report = $("report");
+const facts = $("facts");
+const lrs = $("lrs");
+
+const exampleFacts =
+"Am Montag um 10 Uhr ereignete sich auf dem Schulhof ein Unfall. Max stieß beim Rennen mit einem anderen Schüler zusammen. Die Lehrerin rief Hilfe.";
+
+const exampleReport =
+"Am Montag ereignete sich gegen 10 Uhr auf dem Schulhof ein Unfall. Während der Pause lief Max über den Schulhof. Dabei stieß er mit einem anderen Schüler zusammen. Einer der Schüler fiel zu Boden. Die Lehrerin bemerkte den Unfall und rief Hilfe. Weitere Angaben zu den Verletzungen liegen nicht vor.";
+
+function updateCounts() {
+  const text = report.value.trim();
+  const words = text ? text.split(/\s+/u).length : 0;
+  $("wordCount").textContent = words + (words === 1 ? " Wort" : " Wörter");
+  $("charCount").textContent = report.value.length + " Zeichen";
+}
+report.addEventListener("input", updateCounts);
+
+$("exampleBtn").addEventListener("click", () => {
+  facts.value = exampleFacts;
+  report.value = exampleReport;
+  $("criteria").value = "Einleitung, Hauptteil, Schluss, sachliche Sprache, W-Fragen";
+  updateCounts();
+  report.focus();
+});
+
+$("clearBtn").addEventListener("click", () => {
+  report.value = "";
+  facts.value = "";
+  $("criteria").value = "";
+  $("results").classList.add("hidden");
+  $("loading").classList.add("hidden");
+  updateCounts();
+  report.focus();
+});
+
+// Normierung für einen einfachen lokalen Faktenvergleich.
+// Keine externe KI und keine Übertragung an einen Server.
+function normalize(s) {
+  return s.toLocaleLowerCase("de-DE")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[„“"']/g, "")
+    .replace(/[^\p{L}\p{N}\s:.-]/gu, " ")
+    .replace(/\s+/g, " ").trim();
+}
+
+function sentences(text) {
+  return text.match(/[^.!?]+[.!?]?/gu)?.map(s => s.trim()).filter(Boolean) || [];
+}
+
+function wordCount(text) {
+  return text.trim() ? text.trim().split(/\s+/u).length : 0;
+}
+
+function evaluate(text, sourceFacts, criteria, ignoreSpelling) {
+  const normalizedText = normalize(text);
+  const normalizedFacts = normalize(sourceFacts);
+  const words = text.trim().split(/\s+/u).filter(Boolean);
+  const sentenceList = sentences(text);
+  const notes = [];
+  const positives = [];
+  let points = 0;
+  let possible = 0;
+
+  function criterion(title, ok, detail, weight = 1) {
+    possible += weight;
+    if (ok) {
+      points += weight;
+      positives.push({title, detail});
+    } else {
+      notes.push({title, detail});
+    }
+  }
+
+  criterion("Bericht vorhanden",
+    words.length >= 25,
+    words.length < 25
+      ? "Der Bericht ist sehr kurz. Ergänze die bekannten Angaben, ohne etwas zu erfinden."
+      : "Der Bericht enthält ausreichend Text für eine erste Prüfung.", 2);
+
+  const hasWhen = /\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|heute|gestern|morgens|mittags|abends|uhr|gegen|am \d{1,2}\.)\b/i.test(text);
+  const hasWhere = /\b(auf dem|in der|im |an der|vor dem|vor der|schulhof|straße|strasse|zimmer|halle|platz|weg|treppe|gebäude|gebäude)\b/i.test(text);
+  const hasWho = /\b(schüler|schülerin|person|kind|lehrer|lehrerin|zeuge|fahrer|fahrerin|mann|frau|max|mia|ich)\b/i.test(text);
+  const hasWhat = /\b(unfall|stieß|stiess|fiel|rutschte|stürzte|stuerzte|zusammen|verletzte|prallte|ereignete|passierte)\b/i.test(text);
+  const hasHow = /\b(weil|dadurch|während|waehrend|als |beim |indem|plötzlich|ploetzlich|danach|anschließend|anschliessend)\b/i.test(text);
+  const hasOutcome = /\b(danach|anschließend|anschliessend|hilfe|rettungsdienst|lehrkraft|verletz|erste hilfe|notruf|wurde|endete)\b/i.test(text);
+
+  criterion("Wer?", hasWho, "Prüfe, ob die beteiligten Personen genannt werden.");
+  criterion("Was?", hasWhat, "Beschreibe das Unfallereignis konkret.");
+  criterion("Wann?", hasWhen, "Ergänze Zeit oder Datum, falls bekannt.");
+  criterion("Wo?", hasWhere, "Nenne den Unfallort, falls bekannt.");
+  criterion("Wie?", hasHow, "Beschreibe den Ablauf in der richtigen Reihenfolge.");
+  criterion("Folgen und Maßnahmen", hasOutcome, "Ergänze bekannte Folgen und Hilfeleistungen.");
+
+  const chronological = /\b(zuerst|danach|anschließend|anschliessend|daraufhin|später|spaeter|schließlich|schliesslich|währenddessen)\b/i.test(text);
+  criterion("Zeitlicher Ablauf", chronological,
+    "Verwende passende Übergänge, um die Reihenfolge klar zu machen.");
+
+  const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim()).length;
+  criterion("Absätze und Aufbau", paragraphs >= 2 || sentenceList.length >= 5,
+    "Gliedere den Text in Einleitung, Hauptteil und Schluss.");
+
+  const factualTokens = normalizedFacts.split(/\s+/).filter(w => w.length > 3);
+  const reportTokens = new Set(normalizedText.split(/\s+/));
+  const factOverlap = factualTokens.length
+    ? factualTokens.filter(w => reportTokens.has(w)).length / factualTokens.length
+    : null;
+
+  if (sourceFacts.trim()) {
+    const factSentences = sentences(sourceFacts);
+    // Ein einfacher Wortvergleich ist kein Beweis, dass Aussagen wahr oder falsch sind.
+    const overlapPercent = Math.round((factOverlap || 0) * 100);
+    criterion("Abgleich mit den Vorgaben",
+      overlapPercent >= 25,
+      "Etwa " + overlapPercent + "% der längeren Wörter aus den Vorgaben kommen auch im Bericht vor. Das ist nur ein Wortvergleich, keine inhaltliche Wahrheitsprüfung.",
+      2);
+
+    const reportSentences = sentences(text);
+    const unsupported = reportSentences.filter(s => {
+      const tokens = normalize(s).split(/\s+/).filter(w => w.length > 4);
+      if (tokens.length < 5) return false;
+      const matched = tokens.filter(w => normalizedFacts.includes(w)).length;
+      return matched / tokens.length < 0.2;
+    });
+    if (unsupported.length) {
+      notes.push({
+        title: "Möglicherweise zusätzliche Angaben",
+        detail: unsupported.slice(0, 3).join(" ") +
+          " — bitte selbst prüfen, ob diese Aussagen tatsächlich aus den Vorgaben hervorgehen."
+      });
+    }
+  } else {
+    notes.push({
+      title: "Kein Faktenabgleich möglich",
+      detail: "Trage die vorgegebenen Fakten ein. Ohne sie kann die Website nicht beurteilen, ob Angaben zum Unfall stimmen."
+    });
+  }
+
+  const timeWords = /\b(ist passiert|passiert|passierte|war|waren|lief|liefen|stieß|stiess|fiel|rutschte|stürzte|stuerzte|sah|rief|kam|ging|wurde|wurden|ereignete)\b/i.test(text);
+  criterion("Berichtsstil / Zeitform", timeWords,
+    "Ein Unfallbericht steht häufig im Präteritum. Prüfe, ob die Zeitform einheitlich ist.");
+
+  // Rechtschreibprüfung ist absichtlich nicht Teil der Bewertung.
+  // LRS blendet auch die optionale Browser-Rechtschreibkontrolle aus.
+  const userCriteria = criteria.trim();
+  if (userCriteria) {
+    const terms = userCriteria.split(/[,;\n]+/).map(x => x.trim()).filter(Boolean);
+    terms.forEach(term => {
+      const termNorm = normalize(term);
+      const found = termNorm.length > 2 && normalizedText.includes(termNorm);
+      criterion("Eigenes Kriterium: " + term,
+        found,
+        found
+          ? "Das Stichwort kommt im Bericht vor. Das beweist noch nicht, dass die Vorgabe vollständig erfüllt ist."
+          : "Prüfe, ob diese Vorgabe inhaltlich umgesetzt wurde.");
+    });
+  }
+
+  const score = possible ? Math.round(points / possible * 100) : 0;
+  return {score, notes, positives, words:words.length, sentenceCount:sentenceList.length, ignoreSpelling, factOverlap};
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[ch]);
+}
+
+const scanSteps = [
+  ["Text wird eingelesen …", "Länge, Wörter und Sätze werden gezählt."],
+  ["Berichtsstruktur wird geprüft …", "Einleitung, Ablauf und Schluss werden untersucht."],
+  ["W-Fragen werden analysiert …", "Wer, was, wann, wo, wie und Folgen werden gesucht."],
+  ["Vorgaben werden abgeglichen …", "Wörter werden mit den bereitgestellten Fakten verglichen."],
+  ["Bewertung wird erstellt …", "Hinweise und mögliche Verbesserungen werden zusammengestellt."]
+];
+
+let busy = false;
+
+$("checkBtn").addEventListener("click", async () => {
+  if (busy) return;
+
+  const text = report.value.trim();
+  if (text.length < 10) {
+    alert("Bitte schreibe zuerst einen Unfallbericht mit mindestens ein paar Sätzen.");
+    report.focus();
+    return;
+  }
+
+  busy = true;
+  $("checkBtn").disabled = true;
+  $("checkBtn").textContent = "Prüfung läuft …";
+  $("results").classList.add("hidden");
+  $("loading").classList.remove("hidden");
+  $("scanText").textContent = "";
+  $("progressBar").style.width = "0%";
+  $("percent").textContent = "0 %";
+  $("loading").scrollIntoView({behavior:"smooth", block:"center"});
+
+  try {
+    for (let i = 0; i < scanSteps.length; i++) {
+      $("loadingTitle").textContent = scanSteps[i][0];
+      $("scanText").textContent += "› " + scanSteps[i][0] + "\n  " + scanSteps[i][1] + "\n";
+      const percent = Math.round(((i + 1) / scanSteps.length) * 100);
+      $("progressBar").style.width = percent + "%";
+      $("percent").textContent = percent + " %";
+      await new Promise(resolve => setTimeout(resolve, 650));
+    }
+
+    const result = evaluate(text, facts.value, $("criteria").value, lrs.checked);
+    renderResults(result);
+  } catch (error) {
+    $("scanText").textContent += "\nDie lokale Prüfung konnte nicht abgeschlossen werden.";
+  } finally {
+    busy = false;
+    $("checkBtn").disabled = false;
+    $("checkBtn").textContent = "✦ Bericht jetzt prüfen";
+  }
+});
+
+function renderResults(r) {
+  const scoreClass = r.score >= 80 ? "good" : r.score >= 55 ? "warn" : "bad";
+  const verdict = r.score >= 80
+    ? "Gute Grundlage"
+    : r.score >= 55
+      ? "Noch verbesserbar"
+      : "Weitere Überarbeitung empfohlen";
+
+  const notesHTML = r.notes.length
+    ? r.notes.map(n => `
+      <div class="checkitem">
+        <strong class="warn">△ ${escapeHTML(n.title)}</strong>
+        ${escapeHTML(n.detail)}
+      </div>`).join("")
+    : `<div class="checkitem"><strong class="good">✓ Keine offenen Prüfpunkte</strong>Die allgemeinen automatischen Kriterien sind erfüllt. Lies den Bericht trotzdem selbst noch einmal.</div>`;
+
+  const positivesHTML = r.positives.map(p => `
+    <div class="checkitem">
+      <strong class="good">✓ ${escapeHTML(p.title)}</strong>
+      ${escapeHTML(p.detail)}
+    </div>`).join("");
+
+  $("results").innerHTML = `
+    <div class="result-card">
+      <div class="eyebrow">04 — Prüfergebnis</div>
+      <div class="scoretop" style="margin-top:15px">
+        <div class="scorecircle"><div>${r.score}<small style="display:block;text-align:center">/ 100</small></div></div>
+        <div>
+          <h2 class="${scoreClass}" style="font-size:23px">${verdict}</h2>
+          <p class="muted" style="margin-bottom:0">Automatischer Orientierungswert, keine echte Schulnote.</p>
+          <p style="font-size:12px;color:var(--muted)">LRS-Modus: ${r.ignoreSpelling ? "aktiv – Rechtschreibung nicht bewertet" : "aus – Rechtschreibung wird auch ohne LRS-Modus nicht benotet"}</p>
+        </div>
+      </div>
+      <div class="result-grid">
+        <div class="metric"><strong>${r.words}</strong><span>Wörter</span></div>
+        <div class="metric"><strong>${r.sentenceCount}</strong><span>Sätze</span></div>
+        <div class="metric"><strong>${r.positives.length}</strong><span>Erfüllte Prüfpunkte</span></div>
+        <div class="metric"><strong>${r.notes.length}</strong><span>Hinweise zur Überarbeitung</span></div>
+      </div>
+    </div>
+    <div class="result-card">
+      <h2>Was bereits gut funktioniert</h2>
+      <div class="checklist">${positivesHTML || '<div class="checkitem">Noch keine positiven Kriterien erkannt. Prüfe die Hinweise unten.</div>'}</div>
+    </div>
+    <div class="result-card">
+      <h2>Das kannst du verbessern</h2>
+      <div class="checklist">${notesHTML}</div>
+    </div>
+    <div class="notice">
+      <strong>Grenzen der Prüfung:</strong> Die Analyse erkennt einfache Wörter und Muster. Sie versteht nicht zuverlässig den gesamten Sinn, erkennt nicht alle erfundenen Angaben und ersetzt keine Lehrkraft. Der Faktenvergleich ist nur ein Wortvergleich. Kontrolliere das Ergebnis selbst anhand der Aufgabenstellung.
+    </div>`;
+
+  $("loading").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  $("results").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+// LRS-Modus: Browser-Rechtschreibmarkierungen ausblenden.
+// Das ändert nicht den Inhalt und nicht die inhaltlichen Kriterien.
+function setLRS() {
+  report.spellcheck = !lrs.checked;
+  report.setAttribute("aria-describedby", lrs.checked ? "lrsHelp" : "wordCount");
+}
+lrs.addEventListener("change", setLRS);
+updateCounts();
+</script>
+</body>
+</html>
