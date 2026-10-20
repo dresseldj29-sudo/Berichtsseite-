@@ -3,85 +3,99 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827">
-<title>UnfallCheck AI – Bericht prüfen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1120">
+<title>UnfallCheck AI – Schülerportal</title>
 <style>
-:root{--bg:#0b1120;--panel:#121c2d;--panel2:#19273c;--line:#30415a;--text:#f1f5fb;--muted:#a4b2c6;--blue:#60a5fa;--cyan:#5eead4;--green:#4ade80;--yellow:#fbbf24;--red:#fb7185}
+:root {
+  --bg:#0b1120;--panel:#121c2d;--panel2:#19283e;
+  --line:#30415a;--text:#f1f5fb;--muted:#a4b2c6;
+  --cyan:#5eead4;--blue:#60a5fa;--green:#4ade80;
+  --yellow:#fbbf24;--red:#fb7185;
+}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at top,#1b3150,var(--bg) 65%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-header{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px max(16px,calc((100vw - 1150px)/2));background:#0b1120ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
-.brand{font-weight:850;font-size:19px}.brand span{color:var(--cyan)}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px}
-.badge{font-size:11px;color:var(--cyan);border:1px solid var(--line);padding:8px 10px;border-radius:25px}
-main{max-width:1150px;margin:auto;padding:28px 16px 60px}
-.hero{padding:24px 0 30px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--cyan);font-weight:800}
-h1{font-size:clamp(32px,6vw,50px);line-height:1.08;letter-spacing:-1px;margin:12px 0}
-h1 span{color:var(--cyan)}h2{font-size:19px;margin:0 0 8px}h3{font-size:15px}
-p{line-height:1.6}.muted,.hint{color:var(--muted)}.muted{font-size:13px}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px max(15px,calc((100vw - 1160px)/2));background:#0b1120ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.brand{font-size:19px;font-weight:850}.brand span{color:var(--cyan)}.brand small{display:block;font-size:10px;letter-spacing:1px;color:var(--muted)}
+.badge{border:1px solid var(--line);border-radius:30px;padding:8px 10px;color:var(--cyan);font-size:11px}
+main{max-width:1160px;margin:auto;padding:25px 16px 55px}
+.hero{padding:20px 0 26px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--cyan);font-weight:850}
+h1{font-size:clamp(32px,5.5vw,50px);line-height:1.08;letter-spacing:-1px;margin:12px 0}
+h1 span{color:var(--cyan)}h2{font-size:19px;margin:0 0 8px}h3{font-size:15px;margin:0 0 8px}
+p{line-height:1.65}.muted,.hint{color:var(--muted)}.muted{font-size:13px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.panel,.card{min-width:0;background:linear-gradient(145deg,#17243a,#111a2b);border:1px solid var(--line);border-radius:18px;padding:21px;margin-bottom:18px}
-.field{margin-bottom:16px}label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
-input,select,textarea{font:inherit;color:var(--text);background:#0b1423;border:1px solid #35465f;border-radius:10px;padding:12px;width:100%}
-textarea{min-height:100px;resize:vertical;line-height:1.6}
-#report{min-height:230px}
+.panel,.card{background:linear-gradient(145deg,#17243a,#111a2b);border:1px solid var(--line);border-radius:18px;padding:21px;margin-bottom:18px;min-width:0}
+.field{margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}
+input,select,textarea{font:inherit;width:100%;padding:12px;color:var(--text);background:#0b1423;border:1px solid #35465f;border-radius:10px}
+textarea{min-height:100px;resize:vertical;line-height:1.65}
+#report{min-height:235px}
 input[type=checkbox]{width:18px;height:18px;accent-color:#14b8a6}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .hint{font-size:12px;line-height:1.6;margin-top:7px}
 .btn{border:0;border-radius:10px;padding:12px 15px;font:inherit;font-weight:800;cursor:pointer}
+.btn:disabled{opacity:.55;cursor:wait}
 .primary{background:linear-gradient(100deg,#2563eb,#0d9488);color:white}
 .secondary{background:#223149;color:white;border:1px solid #35465f}
-.btn:disabled{opacity:.5;cursor:wait}
 .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
 .actions .btn{flex:1}
+.full{width:100%;margin-top:14px}
 .notice{background:#102b35;border:1px solid #28515c;color:#d0faf0;border-radius:11px;padding:13px;font-size:12px;line-height:1.7}
-.upload{display:block;border:1px dashed #4b6987;border-radius:13px;padding:18px;text-align:center;background:#0c1728;cursor:pointer}
-.upload strong{display:block;color:var(--cyan);margin:8px}
-.upload input{margin-top:10px}
-#previews{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.preview{width:105px;position:relative}.preview img{width:100%;height:90px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
-.preview button{width:100%;padding:5px;margin-top:4px;font-size:11px}
+.upload{display:block;text-align:center;background:#0c1728;border:1px dashed #4b6987;border-radius:14px;padding:20px;cursor:pointer}
+.upload:hover{border-color:var(--cyan);background:#102135}
+.upload .symbol{font-size:32px}
+.upload strong{display:block;color:var(--cyan);margin:8px 0}
+.upload input{margin-top:12px}
+.upload input::file-selector-button{background:#243750;color:white;border:0;border-radius:7px;padding:8px;margin-right:8px;cursor:pointer}
+#previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;margin-top:14px}
+.preview{padding:8px;border:1px solid var(--line);border-radius:11px;background:#0b1423;min-width:0}
+.preview img{width:100%;height:100px;object-fit:contain;border-radius:6px;background:#08101d}
+.preview .filename{font-size:11px;color:var(--muted);overflow-wrap:anywhere;margin:6px 0}
+.preview button{width:100%;font-size:11px;padding:7px}
+#imageStatus{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.6}
 .progress{height:7px;background:#26364c;border-radius:10px;overflow:hidden;margin:14px 0}
 #bar{height:100%;width:0;background:linear-gradient(90deg,#3b82f6,#5eead4);transition:width .3s}
-#scan{font:12px/1.9 ui-monospace,monospace;color:#9cefe1;white-space:pre-wrap;min-height:60px}
-#results .card{margin-top:18px}
-.score{font-size:42px;color:var(--cyan);font-weight:850}
-.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px}
+#scan{font:12px/1.9 ui-monospace,monospace;color:#9cefe1;white-space:pre-wrap;min-height:55px}
+.score{font-size:43px;color:var(--cyan);font-weight:850}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}
 .metric,.item{background:#0b1423;border:1px solid #2d3d54;border-radius:11px;padding:13px;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
 .metric strong{display:block;font-size:21px}
 .item{margin-top:9px}.good{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}
-.example{white-space:pre-wrap;line-height:1.8;font-size:14px;user-select:none;-webkit-user-select:none}
-footer{max-width:1150px;margin:auto;padding:0 16px 30px;font-size:12px;color:var(--muted);line-height:1.8}
+.example{white-space:pre-wrap;line-height:1.8;font-size:14px}
 .hidden{display:none!important}
-@media(max-width:760px){.grid{grid-template-columns:1fr}header{padding:12px 14px}.panel,.card{padding:16px}}
+footer{max-width:1160px;margin:auto;padding:0 16px 30px;font-size:12px;color:var(--muted);line-height:1.8}
+@media(max-width:760px){header{padding:12px 14px}.grid{grid-template-columns:1fr}.panel,.card{padding:16px}}
 @media(max-width:430px){.row{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.badge{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <header>
- <div class="brand">✓ UnfallCheck <span>AI</span><small>BERICHTSPRÜFUNG & LERNHILFE</small></div>
- <div class="badge">LOKALE ANALYSE</div>
+ <div class="brand">✓ UnfallCheck <span>AI</span><small>SCHÜLERPORTAL · BERICHTSPRÜFUNG</small></div>
+ <div class="badge">BILD + TEXT</div>
 </header>
 
 <main>
  <section class="hero">
   <div class="eyebrow">DEIN SCHREIBASSISTENT</div>
   <h1>Unfallberichte.<br><span>Prüfen und verbessern.</span></h1>
-  <p class="muted">Lade dein Aufgabenblatt hoch, gib die Vorgaben ein und prüfe deinen Bericht. Die Ergebnisse zeigen, welche Kriterien erfüllt sind und was du noch verbessern kannst.</p>
+  <p class="muted">Lade ein Aufgabenblatt, ein Informationsbild oder ein Foto deines handschriftlichen Berichts hoch. Ergänze die bekannten Fakten und prüfe deinen Text anhand der angegebenen Kriterien.</p>
  </section>
 
  <div class="grid">
   <section class="panel">
-   <h2>01 · Schule und Aufgabe</h2>
-   <p class="muted">Die Schule wird anhand deiner Angaben geprüft, nicht anhand einer unbekannten Schuldatenbank.</p>
+   <h2>01 · Schüler und Aufgabe</h2>
+   <p class="muted">Die Schule und Klasse dienen zur Einordnung. Offizielle Schulregeln werden nur geprüft, wenn die entsprechenden Vorgaben bereitgestellt werden.</p>
+
    <div class="field">
-    <label for="school">Schulname</label>
+    <label for="school">Schule</label>
     <input id="school" maxlength="120" placeholder="Name der Schule">
    </div>
    <div class="row">
     <div class="field">
      <label for="className">Klasse</label>
      <select id="className">
-      <option value="">Bitte wählen</option>
+      <option value="">Bitte auswählen</option>
       <option>5. Klasse</option><option>6. Klasse</option>
       <option>7. Klasse</option><option>8. Klasse</option>
       <option>9. Klasse</option><option>10. Klasse</option>
@@ -90,7 +104,7 @@ footer{max-width:1150px;margin:auto;padding:0 16px 30px;font-size:12px;color:var
      </select>
     </div>
     <div class="field">
-     <label for="level">Bewertungsniveau</label>
+     <label for="level">Niveau</label>
      <select id="level">
       <option value="basic">Grundlegend</option>
       <option value="standard" selected>Normal</option>
@@ -100,55 +114,62 @@ footer{max-width:1150px;margin:auto;padding:0 16px 30px;font-size:12px;color:var
    </div>
 
    <div class="field">
-    <label for="criteria">Vorgaben der Lehrkraft</label>
-    <textarea id="criteria" placeholder="Zum Beispiel: Einleitung mit W-Fragen, Hauptteil in zeitlicher Reihenfolge, Schluss mit Folgen, sachliche Sprache, Präteritum."></textarea>
+    <label for="criteria">Aufgabenstellung und Bewertungskriterien</label>
+    <textarea id="criteria" placeholder="Was verlangt die Lehrkraft? Zum Beispiel: W-Fragen, Einleitung, Hauptteil, Schluss, Präteritum und sachliche Sprache."></textarea>
    </div>
 
    <div class="field">
-    <label for="facts">Bekannte Informationen zum Unfall</label>
-    <textarea id="facts" placeholder="Was ist laut Aufgabenstellung wirklich passiert? Wer war beteiligt? Wann und wo? Welche Folgen sind bekannt?"></textarea>
+    <label for="facts">Bekannte Unfallinformationen</label>
+    <textarea id="facts" placeholder="Wer war beteiligt? Wann und wo ist es passiert? Was ist passiert? Welche Folgen sind bekannt? Verwende nur die vorgegebenen Informationen."></textarea>
    </div>
+
+   <h2 style="margin-top:24px">02 · Bilder hochladen</h2>
+   <p class="muted">Dieser Upload ist für Schülerinnen und Schüler direkt auf der Webseite nutzbar.</p>
 
    <label class="upload" for="images">
-    <span style="font-size:28px">▧</span>
-    <strong>Aufgabenblatt oder Informationsbild hochladen</strong>
-    <span class="muted">JPG, PNG oder WebP · mehrere Bilder möglich</span>
+    <div class="symbol">📷</div>
+    <strong>Bild oder Foto auswählen</strong>
+    <span class="muted">Auf dem Handy oder Tablet kannst du ein Bild aus deinen Fotos wählen oder – falls verfügbar – ein neues Foto aufnehmen.</span>
     <input id="images" type="file" accept="image/jpeg,image/png,image/webp" multiple>
    </label>
+
+   <div id="imageStatus" aria-live="polite">Noch keine Bilder ausgewählt.</div>
    <div id="previews"></div>
+
    <div class="actions">
-    <button class="btn secondary" id="ocrBtn" type="button">Text aus Bildern erkennen</button>
+    <button class="btn primary" id="ocrBtn" type="button">Text aus Bildern erkennen</button>
     <button class="btn secondary" id="clearImages" type="button">Bilder entfernen</button>
    </div>
-   <p class="hint" id="ocrStatus">Die Texterkennung benötigt eine Internetverbindung zum Laden der OCR-Bibliothek. Die Bilder werden von diesem Code nicht an einen KI-Anbieter gesendet.</p>
-
-   <div class="notice">Tipp: Prüfe den erkannten Text vor der Bewertung. Handschrift, schlechte Bildqualität oder schiefe Fotos können zu Fehlern führen.</div>
+   <p class="hint">Bis zu 8 Bilder, maximal 10 MB pro Bild. Erkannt werden gedruckter Text und – abhängig von der Bildqualität – Teile handschriftlicher Texte.</p>
+   <div class="notice">Die OCR-Texterkennung lädt eine Bibliothek aus einem CDN. Der Bildinhalt wird durch diesen Code nicht an einen KI-Anbieter übertragen. Kontrolliere den erkannten Text immer selbst.</div>
   </section>
 
   <section class="panel">
-   <h2>02 · Dein Unfallbericht</h2>
-   <p class="muted">Schreibe deinen Bericht oder füge deinen Text ein.</p>
+   <h2>03 · Dein Unfallbericht</h2>
+   <p class="muted">Schreibe deinen Text selbst oder übernimm den erkannten Text aus einem hochgeladenen Bild.</p>
+
    <div class="field">
     <label for="report">Berichtstext</label>
-    <textarea id="report" placeholder="Schreibe hier deinen Unfallbericht …" spellcheck="true"></textarea>
+    <textarea id="report" placeholder="Hier deinen Unfallbericht eingeben …" spellcheck="true"></textarea>
     <div class="hint"><span id="words">0 Wörter</span> · <span id="chars">0 Zeichen</span></div>
    </div>
 
    <div class="item">
-    <label style="display:flex;gap:10px;align-items:flex-start">
+    <label style="display:flex;align-items:flex-start;gap:10px">
      <input type="checkbox" id="lrs">
      <span>LRS-Modus aktivieren
-      <span class="hint" style="display:block;font-weight:400">Rechtschreibung wird nicht bewertet. Inhalt, Fakten und Aufbau bleiben wichtig.</span>
+      <span class="hint" style="display:block;font-weight:400">Rechtschreibung wird nicht bewertet. Inhalt, Aufbau und Fakten bleiben wichtig.</span>
      </span>
     </label>
    </div>
 
    <div class="actions">
-    <button class="btn secondary" id="sample" type="button">Beispiel einsetzen</button>
-    <button class="btn secondary" id="reset" type="button">Alles leeren</button>
+    <button class="btn secondary" id="sample" type="button">Beispiel laden</button>
+    <button class="btn secondary" id="reset" type="button">Eingaben leeren</button>
    </div>
-   <button class="btn primary" id="check" type="button" style="width:100%;margin-top:15px">✦ Bericht prüfen</button>
-   <p class="hint">Die Prüfung liefert Lernhinweise und keine verbindliche Schulnote.</p>
+
+   <button class="btn primary full" id="check" type="button">✦ Unfallbericht prüfen</button>
+   <p class="hint">Die Prüfung ist eine Lernhilfe, keine verbindliche Schulnote. Die Website erfindet keine fehlenden Vorgaben, kann aber Fehler bei der automatischen Analyse machen.</p>
   </section>
  </div>
 
@@ -161,104 +182,126 @@ footer{max-width:1150px;margin:auto;padding:0 16px 30px;font-size:12px;color:var
  <section id="results" class="hidden" aria-live="polite"></section>
 
  <section class="panel">
-  <h2>03 · Beispiel eines Unfallberichts</h2>
-  <p class="muted">Das folgende Muster ist erfunden und dient nur als Lernbeispiel.</p>
-  <div class="example">
-Unfall auf dem Schulhof
+  <h2>04 · Muster-Unfallbericht</h2>
+  <p class="muted">Das folgende Beispiel ist erfunden und dient nur zum Lernen.</p>
+  <div class="example">Unfall auf dem Schulhof
 
 Am Montag, dem 12. Mai, ereignete sich gegen 10 Uhr auf dem Schulhof ein Unfall.
 
 Während der Pause lief ein Schüler über den Schulhof. Dabei stieß er mit einem anderen Schüler zusammen. Einer der Schüler fiel zu Boden und verletzte sich am Knie. Eine Lehrkraft bemerkte den Unfall und organisierte Hilfe.
 
-Weitere Angaben zu den Verletzungen liegen nicht vor.
-  </div>
+Weitere Angaben zu den Verletzungen liegen nicht vor.</div>
+  <p class="hint">Bei deinem eigenen Bericht darfst du keine Einzelheiten aus dem Muster als echte Fakten übernehmen, wenn sie nicht in deiner Aufgabenstellung stehen.</p>
  </section>
 </main>
 
 <footer>
-<strong>Transparenz:</strong> Diese Version verwendet eine regelbasierte Textanalyse und OCR, aber noch kein generatives KI-Modell. Schulname und Klasse werden erfasst; eine offizielle Prüfung der Schule oder ihrer Lehrpläne erfolgt nur dann, wenn entsprechende verlässliche Informationen tatsächlich bereitgestellt und geprüft werden. Die Website erfindet keine fehlenden Fakten absichtlich, kann aber mögliche Widersprüche nicht zuverlässig erkennen. Keine echte Schulnote.
+ <strong>Technische Hinweise:</strong> Die Seite nutzt eine lokale regelbasierte Analyse und OCR, jedoch noch kein generatives KI-Modell. Schulname und Klasse werden nicht automatisch gegen eine offizielle Schuldatenbank geprüft. Ein echter KI-Faktencheck erfordert ein sicheres Backend. Der Kopierschutz kann nicht vollständig verhindern, dass Ergebnisse abgeschrieben oder per Screenshot gespeichert werden.
 </footer>
 
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const report=$("report"), facts=$("facts"), criteria=$("criteria");
+const report=$("report"),facts=$("facts"),criteria=$("criteria");
 let selectedFiles=[];
 let ocrWorker=null;
 let busy=false;
 
-function count(){
+const exampleFacts="Am Montag um 10 Uhr ereignete sich auf dem Schulhof ein Unfall. Max stieß beim Rennen mit einem anderen Schüler zusammen. Die Lehrerin rief Hilfe.";
+const exampleReport="Am Montag ereignete sich gegen 10 Uhr auf dem Schulhof ein Unfall. Während der Pause lief Max über den Schulhof. Dabei stieß er mit einem anderen Schüler zusammen. Einer der Schüler fiel zu Boden. Die Lehrerin bemerkte den Unfall und rief Hilfe. Weitere Angaben zu den Verletzungen liegen nicht vor.";
+
+function countWords(){
  const t=report.value.trim();
  $("words").textContent=(t?t.split(/\s+/u).length:0)+" Wörter";
  $("chars").textContent=report.value.length+" Zeichen";
 }
-report.addEventListener("input",count);
+report.addEventListener("input",countWords);
 $("lrs").addEventListener("change",()=>{
  report.spellcheck=!$("lrs").checked;
 });
 
-const sampleFacts="Am Montag um 10 Uhr ereignete sich auf dem Schulhof ein Unfall. Max stieß beim Rennen mit einem anderen Schüler zusammen. Die Lehrerin rief Hilfe.";
-const sampleReport="Am Montag ereignete sich gegen 10 Uhr auf dem Schulhof ein Unfall. Während der Pause lief Max über den Schulhof. Dabei stieß er mit einem anderen Schüler zusammen. Einer der Schüler fiel zu Boden. Die Lehrerin bemerkte den Unfall und rief Hilfe. Weitere Angaben zu den Verletzungen liegen nicht vor.";
-
 $("sample").addEventListener("click",()=>{
- facts.value=sampleFacts;
- report.value=sampleReport;
- criteria.value="Einleitung, Hauptteil, Schluss, sachliche Sprache, W-Fragen, zeitlicher Ablauf";
- count();
+ facts.value=exampleFacts;
+ report.value=exampleReport;
+ criteria.value="Einleitung, Hauptteil, Schluss, sachliche Sprache, W-Fragen und zeitlicher Ablauf";
+ countWords();
 });
 
 $("reset").addEventListener("click",()=>{
- report.value="";facts.value="";criteria.value="";
- $("school").value="";$("className").value="";
+ report.value="";
+ facts.value="";
+ criteria.value="";
+ $("school").value="";
+ $("className").value="";
  $("results").classList.add("hidden");
- count();
+ $("loading").classList.add("hidden");
+ countWords();
 });
-$("clearImages").addEventListener("click",()=>{
- selectedFiles=[];
- $("images").value="";
+
+function addImagePreview(file,index){
+ const box=document.createElement("div");
+ box.className="preview";
+ const img=document.createElement("img");
+ img.alt="Vorschau von Bild "+(index+1);
+ img.src=URL.createObjectURL(file);
+ const filename=document.createElement("div");
+ filename.className="filename";
+ filename.textContent=file.name;
+ const remove=document.createElement("button");
+ remove.className="btn secondary";
+ remove.type="button";
+ remove.textContent="Entfernen";
+ remove.addEventListener("click",()=>{
+  selectedFiles=selectedFiles.filter((_,i)=>i!==index);
+  renderPreviews();
+ });
+ box.append(img,filename,remove);
+ return box;
+}
+
+function renderPreviews(){
  $("previews").replaceChildren();
- $("ocrStatus").textContent="Keine Bilder ausgewählt.";
-});
+ selectedFiles.forEach((file,index)=>{
+  $("previews").append(addImagePreview(file,index));
+ });
+ $("imageStatus").textContent=selectedFiles.length
+  ?selectedFiles.length+" Bild(er) ausgewählt. Bereit für die Texterkennung."
+  :"Noch keine Bilder ausgewählt.";
+}
 
 $("images").addEventListener("change",e=>{
  const files=Array.from(e.target.files||[]);
  const allowed=["image/jpeg","image/png","image/webp"];
  const valid=files.filter(f=>allowed.includes(f.type)&&f.size<=10*1024*1024);
- if(valid.length!==files.length){
-  $("ocrStatus").textContent="Einige Dateien wurden übersprungen. Erlaubt sind JPG, PNG und WebP bis 10 MB je Bild.";
- }
+ const skipped=files.length-valid.length;
  selectedFiles=valid.slice(0,8);
- $("previews").replaceChildren();
- selectedFiles.forEach((file,i)=>{
-  const box=document.createElement("div");box.className="preview";
-  const img=document.createElement("img");
-  img.alt="Vorschau Bild "+(i+1);
-  img.src=URL.createObjectURL(file);
-  const name=document.createElement("div");
-  name.className="hint";name.textContent="Bild "+(i+1);
-  box.append(img,name);
-  $("previews").append(box);
- });
- if(selectedFiles.length){
-  $("ocrStatus").textContent=selectedFiles.length+" Bild(er) bereit. Wähle „Text aus Bildern erkennen“, um die Texterkennung zu starten.";
- }
+ if(valid.length>8)$("imageStatus").textContent="Maximal 8 Bilder. Die ersten 8 gültigen Bilder werden verwendet.";
+ else if(skipped)$("imageStatus").textContent="Einige Dateien wurden übersprungen. Erlaubt: JPG, PNG oder WebP bis 10 MB pro Bild.";
+ renderPreviews();
+ e.target.value="";
 });
 
-async function getOCRWorker(){
+$("clearImages").addEventListener("click",()=>{
+ selectedFiles=[];
+ $("images").value="";
+ renderPreviews();
+});
+
+async function loadOCR(){
  if(ocrWorker)return ocrWorker;
  if(!window.Tesseract){
   await new Promise((resolve,reject)=>{
    const script=document.createElement("script");
    script.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
    script.onload=resolve;
-   script.onerror=()=>reject(new Error("Die OCR-Bibliothek konnte nicht geladen werden. Prüfe deine Internetverbindung."));
-   document.head.append(script);
+   script.onerror=()=>reject(new Error("Die Texterkennung konnte nicht geladen werden. Prüfe deine Internetverbindung."));
+   document.head.appendChild(script);
   });
  }
  ocrWorker=await Tesseract.createWorker("deu+eng",1,{
   logger:m=>{
    if(m.status){
-    $("ocrStatus").textContent="Texterkennung: "+m.status+
+    $("imageStatus").textContent="Texterkennung: "+m.status+
      (typeof m.progress==="number"?" ("+Math.round(m.progress*100)+" %)":"");
    }
   }
@@ -268,31 +311,37 @@ async function getOCRWorker(){
 
 $("ocrBtn").addEventListener("click",async()=>{
  if(!selectedFiles.length){
-  alert("Bitte lade zuerst mindestens ein Bild hoch.");
+  alert("Bitte wähle zuerst ein oder mehrere Bilder aus.");
   return;
  }
  $("ocrBtn").disabled=true;
  try{
-  const worker=await getOCRWorker();
+  const worker=await loadOCR();
   let allText="";
   for(let i=0;i<selectedFiles.length;i++){
-   $("ocrStatus").textContent="Bild "+(i+1)+" von "+selectedFiles.length+" wird gelesen …";
+   $("imageStatus").textContent="Lese Bild "+(i+1)+" von "+selectedFiles.length+" …";
    const result=await worker.recognize(selectedFiles[i]);
-   allText+="\n--- Bild "+(i+1)+" ---\n"+result.data.text.trim()+"\n";
+   allText+="\n[Bild "+(i+1)+"]\n"+result.data.text.trim()+"\n";
   }
-  if(!allText.replace(/--- Bild \d+ ---/g,"").trim()){
-   $("ocrStatus").textContent="Es wurde kein lesbarer Text gefunden. Probiere ein schärferes Foto.";
+  if(!allText.replace(/\[Bild \d+\]/g,"").trim()){
+   $("imageStatus").textContent="Kein lesbarer Text erkannt. Bitte versuche ein schärferes Foto.";
    return;
   }
-  const destination=confirm("OK = erkannten Text zu den bekannten Fakten hinzufügen.\nAbbrechen = erkannten Text zu den Bewertungskriterien hinzufügen.");
-  if(destination){
-   facts.value=(facts.value.trim()+"\n\n"+allText.trim()).trim();
+  const destination=prompt(
+   "Wohin soll der erkannte Text eingefügt werden?\n\n1 = Bekannte Unfallinformationen\n2 = Aufgabenstellung und Bewertungskriterien\n3 = Berichtstext\n\nGib 1, 2 oder 3 ein."
+  );
+  if(destination==="1")facts.value=(facts.value.trim()+"\n\n"+allText.trim()).trim();
+  else if(destination==="2")criteria.value=(criteria.value.trim()+"\n\n"+allText.trim()).trim();
+  else if(destination==="3"){
+   report.value=(report.value.trim()+"\n\n"+allText.trim()).trim();
+   countWords();
   }else{
-   criteria.value=(criteria.value.trim()+"\n\n"+allText.trim()).trim();
+   $("imageStatus").textContent="Texterkennung fertig. Es wurde kein Ziel ausgewählt; der erkannte Text wurde nicht eingefügt.";
+   return;
   }
-  $("ocrStatus").textContent="Texterkennung abgeschlossen. Bitte kontrolliere den erkannten Text auf Fehler.";
+  $("imageStatus").textContent="Texterkennung abgeschlossen. Bitte kontrolliere den erkannten Text auf Fehler.";
  }catch(err){
-  $("ocrStatus").textContent=err.message||"Texterkennung fehlgeschlagen.";
+  $("imageStatus").textContent=err.message||"Die Texterkennung ist fehlgeschlagen.";
  }finally{
   $("ocrBtn").disabled=false;
  }
@@ -300,113 +349,103 @@ $("ocrBtn").addEventListener("click",async()=>{
 
 function norm(s){
  return s.toLocaleLowerCase("de-DE")
- .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
- .replace(/[^\p{L}\p{N}\s]/gu," ")
- .replace(/\s+/g," ").trim();
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+  .replace(/[^\p{L}\p{N}\s]/gu," ")
+  .replace(/\s+/g," ").trim();
 }
 function esc(s){
  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function splitSentences(s){
+function sentenceList(s){
  return s.match(/[^.!?]+[.!?]?/gu)?.map(x=>x.trim()).filter(Boolean)||[];
 }
 
-function evaluate(text,source,ruleText,level){
- const n=norm(text), ns=norm(source);
+function evaluate(text,source,rules,level){
+ const n=norm(text),ns=norm(source);
  const words=n.split(/\s+/).filter(Boolean);
- const sentences=splitSentences(text);
- const checks=[], notes=[];
- let earned=0,total=0;
- function add(title,ok,detail,weight=1){
-  total+=weight;
-  if(ok)earned+=weight;
-  (ok?checks:notes).push({title,detail,ok});
+ const sentences=sentenceList(text);
+ const good=[],issues=[];
+ let points=0,max=0;
+ function criterion(title,ok,detail,weight=1){
+  max+=weight;
+  if(ok)points+=weight;
+  (ok?good:issues).push({title,ok,detail});
  }
- add("Ausreichender Text",words.length>=30,
-  words.length>=30?"Der Bericht enthält genügend Text für eine erste Prüfung.":"Der Text ist kurz. Ergänze nur die tatsächlich bekannten Informationen.",2);
 
- add("Wer?",/\b(schueler|schuelerin|person|kind|lehrer|lehrerin|zeuge|fahrer|fahrerin|mann|frau|max|mia|kind)\b/.test(n),
-  "Prüfe, ob die beteiligten Personen genannt werden.");
- add("Was?",/\b(unfall|stoss|stieß|zusammen|fiel|rutschte|stuerzte|verletzte|prallte|ereignete|passierte)\b/.test(n),
-  "Beschreibe, was genau passiert ist.");
- add("Wann?",/\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|uhr|morgen|mittags|abends|gestern|heute|gegen)\b/.test(n),
-  "Nenne Datum oder Uhrzeit, sofern bekannt.");
- add("Wo?",/\b(schulhof|strasse|straße|zimmer|halle|platz|weg|treppe|gebäude|auf dem|in der|vor dem|vor der)\b/.test(n),
-  "Nenne den Unfallort, sofern bekannt.");
- add("Wie?",/\b(waehrend|während|weil|dadurch|beim|als|indem|ploetzlich|plötzlich|danach|anschliessend|anschließend)\b/.test(n),
-  "Beschreibe den Ablauf und die Abfolge.");
- add("Folgen und Hilfe",/\b(hilfe|rettungsdienst|lehrkraft|verletz|notruf|erste hilfe|anschliessend|anschließend)\b/.test(n),
-  "Nenne bekannte Folgen und Maßnahmen.");
+ criterion("Berichtslänge",words.length>=30,
+  words.length>=30?"Der Bericht hat eine brauchbare Länge.":"Prüfe, ob alle bekannten Informationen enthalten sind.",2);
 
- add("Zeitliche Reihenfolge",/\b(zuerst|danach|anschließend|anschliessend|daraufhin|später|spaeter|schließlich|schliesslich|währenddessen)\b/.test(n),
-  "Nutze Übergänge, damit die Reihenfolge klar wird.");
-
- add("Absätze",text.split(/\n\s*\n/).filter(x=>x.trim()).length>=2||sentences.length>=5,
-  "Gliedere den Bericht in Einleitung, Hauptteil und Schluss.");
-
- const tense=/\b(lief|liefen|stieß|stiess|fiel|rutschte|stürzte|stuerzte|sah|rief|kam|ging|wurde|wurden|ereignete|passierte|bemerkte|organisierte)\b/i.test(text);
- add("Sachlicher Berichtsstil",tense,
-  "Ein Unfallbericht wird häufig sachlich und im Präteritum geschrieben.");
+ criterion("Wer?",/\b(schueler|schuelerin|person|kind|lehrer|lehrerin|zeuge|fahrer|fahrerin|mann|frau|max|mia)\b/.test(n),
+  "Sind die beteiligten Personen genannt?");
+ criterion("Was?",/\b(unfall|stoss|zusammen|fiel|rutschte|stuerzte|verletzte|prallte|ereignete|passierte|zusammenstoss)\b/.test(n),
+  "Wird beschrieben, was passiert ist?");
+ criterion("Wann?",/\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|uhr|morgens|mittags|abends|gestern|heute|gegen)\b/.test(n),
+  "Sind Datum oder Uhrzeit angegeben, falls bekannt?");
+ criterion("Wo?",/\b(schulhof|strasse|zimmer|halle|platz|weg|treppe|gebaeude|auf dem|in der|vor dem|vor der)\b/.test(n),
+  "Ist der Unfallort genannt, falls bekannt?");
+ criterion("Wie?",/\b(waehrend|weil|dadurch|beim|indem|ploetzlich|danach|anschliessend|anschliessend)\b/.test(n),
+  "Ist der Unfallhergang nachvollziehbar beschrieben?");
+ criterion("Folgen und Hilfe",/\b(hilfe|rettungsdienst|lehrkraft|verletz|notruf|erste hilfe|anschliessend|organisierte)\b/.test(n),
+  "Werden bekannte Folgen und Maßnahmen beschrieben?");
+ criterion("Zeitlicher Ablauf",/\b(zuerst|danach|anschliessend|daraufhin|spaeter|schliesslich|waehrenddessen)\b/.test(n),
+  "Ist die Reihenfolge verständlich?");
+ criterion("Aufbau",text.split(/\n\s*\n/).filter(x=>x.trim()).length>=2||sentences.length>=5,
+  "Gliedere in Einleitung, Hauptteil und Schluss.");
+ criterion("Sachlicher Stil",/\b(lief|stieß|stiess|fiel|rutschte|stürzte|stuerzte|sah|rief|kam|ging|wurde|wurden|ereignete|passierte|bemerkte|organisierte)\b/i.test(text),
+  "Ein Unfallbericht wird meist sachlich und im Präteritum geschrieben.");
 
  if(source.trim()){
-  const ft=ns.split(/\s+/).filter(w=>w.length>3);
-  const rt=new Set(n.split(/\s+/));
-  const ratio=ft.length?ft.filter(w=>rt.has(w)).length/ft.length:0;
-  add("Wortabgleich mit Fakten",ratio>=0.25,
-   "Übereinstimmung längerer Wörter: "+Math.round(ratio*100)+" %. Das ist nur ein Wortvergleich und keine Prüfung, ob Aussagen wahr sind.",2);
-
-  const reportSentences=splitSentences(text);
-  const potential=reportSentences.filter(s=>{
+  const sourceWords=ns.split(/\s+/).filter(w=>w.length>3);
+  const reportWords=new Set(n.split(/\s+/));
+  const overlap=sourceWords.length?sourceWords.filter(w=>reportWords.has(w)).length/sourceWords.length:0;
+  criterion("Wortvergleich mit den Fakten",overlap>=.25,
+   "Ungefähr "+Math.round(overlap*100)+" % der längeren Wörter aus den Fakten kommen im Bericht vor. Das ist kein Beweis für inhaltliche Richtigkeit.",2);
+  const suspicious=sentences.filter(s=>{
    const tokens=norm(s).split(/\s+/).filter(w=>w.length>4);
    if(tokens.length<5)return false;
-   return tokens.filter(w=>ns.includes(w)).length/tokens.length<0.2;
+   return tokens.filter(w=>ns.includes(w)).length/tokens.length<.2;
   });
-  if(potential.length)notes.push({
-   title:"Angaben selbst kontrollieren",
-   detail:"Diese Sätze haben nur wenig Wortüberschneidung mit den Vorgaben: "+potential.slice(0,2).join(" ")+" Prüfe, ob sie wirklich belegt sind.",
-   ok:false
+  if(suspicious.length)issues.push({
+   title:"Mögliche zusätzliche Angaben",ok:false,
+   detail:"Prüfe, ob diese Sätze wirklich durch die Aufgabenstellung belegt sind: "+suspicious.slice(0,2).join(" ")
   });
  }else{
-  notes.push({title:"Fakten fehlen",detail:"Gib die bekannten Fakten ein oder lade ein Aufgabenblatt hoch. Ohne Ausgangsinformationen ist kein Faktenabgleich möglich.",ok:false});
+  issues.push({title:"Fakten fehlen",ok:false,detail:"Gib die bekannten Unfallinformationen ein. Ohne Fakten ist kein Vergleich möglich."});
  }
 
- const rules=ruleText.split(/[,;\n]+/).map(x=>x.trim()).filter(Boolean);
- rules.forEach(rule=>{
-  const key=norm(rule);
-  const stop=new Set(["und","oder","der","die","das","ein","eine","mit","von","den","dem","im","in","am","an","ist","soll","sowie"]);
-  const terms=key.split(/\s+/).filter(w=>w.length>3&&!stop.has(w));
+ const stop=new Set(["und","oder","der","die","das","ein","eine","mit","von","den","dem","im","in","am","an","ist","soll"]);
+ rules.split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean).forEach(rule=>{
+  const terms=norm(rule).split(/\s+/).filter(w=>w.length>3&&!stop.has(w));
   const matched=terms.filter(w=>n.includes(w)).length;
-  const ok=terms.length>0&&matched/terms.length>=0.5;
-  add("Schulvorgabe: "+rule,ok,
-   ok?"Wichtige Wörter dieser Vorgabe sind im Text enthalten. Das allein beweist nicht, dass sie vollständig erfüllt ist.":"Prüfe diese Vorgabe und überarbeite den Bericht gegebenenfalls.");
+  const ok=terms.length>0&&matched/terms.length>=.5;
+  criterion("Vorgabe: "+rule,ok,
+   ok?"Einige Schlüsselwörter kommen im Bericht vor; die vollständige Erfüllung ist damit nicht bewiesen.":"Prüfe, ob du diese Vorgabe inhaltlich umgesetzt hast.");
  });
 
  if(level==="advanced"){
-  add("Genauer Ablauf",sentences.length>=7,
-   "Auf anspruchsvollem Niveau sollte der Ablauf klar und detailliert, aber ohne erfundene Angaben beschrieben sein.");
+  criterion("Ausführlicher Ablauf",sentences.length>=7,
+   "Auf anspruchsvollem Niveau sollte der Ablauf ausführlich und klar beschrieben werden, ohne unbekannte Fakten hinzuzufügen.");
  }
- const score=Math.round(100*earned/Math.max(1,total));
- return {score,checks,notes,words:words.length,sentences:sentences.length};
+ return {score:Math.round(points/Math.max(1,max)*100),good,issues,words:words.length,sentences:sentences.length};
 }
 
 const steps=[
- ["Text erfassen","Wörter, Sätze und Absätze werden gezählt."],
- ["Schulvorgaben untersuchen","Die eingegebenen Kriterien werden mit dem Bericht abgeglichen."],
- ["W-Fragen prüfen","Die Angaben zu Wer, Was, Wann, Wo und Wie werden gesucht."],
- ["Fakten vergleichen","Ein einfacher Wortvergleich mit den bereitgestellten Informationen läuft."],
- ["Ergebnis erstellen","Stärken und mögliche Verbesserungen werden angezeigt."]
+ ["Text wird eingelesen","Wörter, Sätze und Absätze werden gezählt."],
+ ["Schulvorgaben werden geprüft","Deine Kriterien werden mit dem Text verglichen."],
+ ["W-Fragen werden untersucht","Wer, was, wann, wo, wie und Folgen werden gesucht."],
+ ["Fakten werden abgeglichen","Ein einfacher Wortvergleich läuft."],
+ ["Ergebnis wird erstellt","Stärken und Verbesserungshinweise werden angezeigt."]
 ];
 
 $("check").addEventListener("click",async()=>{
  if(busy)return;
- const text=report.value.trim();
- if(text.length<10){alert("Bitte schreibe zuerst deinen Unfallbericht.");return;}
- if(!$("school").value.trim()) {
-  if(!confirm("Du hast keinen Schulnamen eingegeben. Trotzdem mit der Berichtprüfung fortfahren?"))return;
+ if(report.value.trim().length<10){
+  alert("Bitte schreibe deinen Unfallbericht oder übernimm zuerst den erkannten Text.");
+  return;
  }
- if(!$("className").value) {
-  if(!confirm("Du hast keine Klasse ausgewählt. Trotzdem fortfahren?"))return;
- }
+ if(!$("school").value.trim()&&!confirm("Kein Schulname eingetragen. Trotzdem prüfen?"))return;
+ if(!$("className").value&&!confirm("Keine Klasse ausgewählt. Trotzdem prüfen?"))return;
+
  busy=true;$("check").disabled=true;
  $("results").classList.add("hidden");
  $("loading").classList.remove("hidden");
@@ -420,36 +459,38 @@ $("check").addEventListener("click",async()=>{
    $("bar").style.width=Math.round((i+1)/steps.length*100)+"%";
    await new Promise(resolve=>setTimeout(resolve,450));
   }
-  const r=evaluate(text,facts.value,criteria.value,$("level").value);
-  const school=$("school").value.trim()||"Nicht angegeben";
-  const cls=$("className").value||"Nicht angegeben";
-  const itemHTML=items=>items.length?items.map(x=>`<div class="item"><strong class="${x.ok?"good":"warn"}">${x.ok?"✓":"△"} ${esc(x.title)}</strong><br>${esc(x.detail)}</div>`).join(""):'<div class="item">Keine Punkte vorhanden.</div>';
+  const r=evaluate(report.value,facts.value,criteria.value,$("level").value);
+  const list=items=>items.length?items.map(x=>`<div class="item"><strong class="${x.ok?"good":"warn"}">${x.ok?"✓":"△"} ${esc(x.title)}</strong><br>${esc(x.detail)}</div>`).join(""):'<div class="item">Keine Punkte vorhanden.</div>';
   $("results").innerHTML=`
    <div class="card">
     <div class="eyebrow">PRÜFERGEBNIS</div>
     <div class="score">${r.score}/100</div>
     <h2>${r.score>=80?"Gute Grundlage":r.score>=55?"Noch verbesserbar":"Weitere Überarbeitung empfohlen"}</h2>
-    <p class="muted">Orientierungswert, keine Schulnote.</p>
+    <p class="muted">Unverbindlicher Orientierungswert, keine Schulnote.</p>
     <div class="metrics">
      <div class="metric"><strong>${r.words}</strong>Wörter</div>
      <div class="metric"><strong>${r.sentences}</strong>Sätze</div>
-     <div class="metric"><strong>${r.notes.length}</strong>Hinweise</div>
+     <div class="metric"><strong>${r.issues.length}</strong>Hinweise</div>
     </div>
-    <div class="item"><strong>Schule:</strong> ${esc(school)}<br><strong>Klasse:</strong> ${esc(cls)}<br><strong>LRS:</strong> ${$("lrs").checked?"aktiv – Rechtschreibung nicht bewertet":"aus – Rechtschreibung wird auch hier nicht in den Punktwert eingerechnet"}</div>
+    <div class="item"><strong>Schule:</strong> ${esc($("school").value||"Nicht angegeben")}<br>
+    <strong>Klasse:</strong> ${esc($("className").value||"Nicht angegeben")}<br>
+    <strong>LRS-Modus:</strong> ${$("lrs").checked?"Aktiv":"Nicht aktiviert"}<br>
+    <strong>Bilder ausgewählt:</strong> ${selectedFiles.length}</div>
    </div>
-   <div class="card"><h2>Erfüllte Prüfpunkte</h2>${itemHTML(r.checks)}</div>
-   <div class="card"><h2>Verbesserungshinweise</h2>${itemHTML(r.notes)}</div>
-   <div class="notice"><strong>Grenzen:</strong> Der Faktenabgleich sucht nach Wortüberschneidungen. Er beweist weder die Wahrheit eines Satzes noch, dass keine Information erfunden wurde. Der Schulname wird nicht automatisch bei der Schule abgefragt. Kontrolliere die Hinweise anhand der Originalaufgabe.</div>`;
+   <div class="card"><h2>Was gut funktioniert</h2>${list(r.good)}</div>
+   <div class="card"><h2>Verbesserungshinweise</h2>${list(r.issues)}</div>
+   <div class="notice"><strong>Wichtig:</strong> Diese Version nutzt keine generative KI. Der Faktenabgleich ist ein einfacher Wortvergleich. Die Website prüft nicht automatisch offizielle Schulregeln und kann nicht sicher feststellen, ob eine Aussage erfunden ist. Kontrolliere das Ergebnis anhand der Originalaufgabe.</div>`;
   $("loading").classList.add("hidden");
   $("results").classList.remove("hidden");
   $("results").scrollIntoView({behavior:"smooth"});
- }catch(e){
-  $("scan").textContent+="Fehler: "+e.message;
+ }catch(error){
+  $("scan").textContent+="\nDie Prüfung konnte nicht abgeschlossen werden.";
  }finally{
   busy=false;$("check").disabled=false;
  }
 });
-count();
+countWords();
+renderPreviews();
 </script>
 </body>
 </html>
